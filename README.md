@@ -32,7 +32,8 @@ Exploits CVE-2018-15473 and runs a fuzzing test from a list of passwords, like t
 
 `./suope.py -h for help`
 ```
-usage: suope.py [-h] [--port PORT] (--username USERNAME | --userfile USERFILE)
+usage: suope.py [-h] [--port PORT] [--suppress SUPPRESS]
+                (--username USERNAME | --userfile USERFILE)
                 (--password PASSWORD | --passfile PASSFILE)
                 hostname
 
@@ -42,15 +43,23 @@ positional arguments:
 optional arguments:
   -h, --help           show this help message and exit
   --port PORT          The target port (Default 22)
+  --suppress SUPPRESS  Suppresses unsuccessful usernames or passwords
   --username USERNAME  A Single Usename to Enumerate
   --userfile USERFILE  The list of usernames (one per line) to enumerate
                        through
   --password PASSWORD  A Single Password to Enumerate
   --passfile PASSFILE  The list of passwords (one per line) to enumerate
                        through
+
 ```
 ### Example Use case with single username and password set
 `./suope.py 192.168.56.3 --username user --passfile = /tmp/rockyou.txt`
+
+### Supressing False inputs
+With large password files, like rockyou, it could be useful to suppress the unsuccessful outputs, if this is required then you can execute the following command
+
+`./suope.py 192.168.56.3 --userfile /tmp/userlist.txt --password pass --suppress True`
+
 
 ## Credits
 Initial Exploit Code -  Justin Gardner, Penetration Tester @ SynerComm AssureIT - Github: https://github.com/Rhynorater/CVE-2018-15473-Exploit  
