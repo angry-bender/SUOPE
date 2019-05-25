@@ -60,6 +60,39 @@ With large password files, like rockyou, it could be useful to suppress the unsu
 
 `./suope.py 192.168.56.3 --userfile /tmp/userlist.txt --password pass --suppress True`
 
+### Troubleshooting Input files
+
+Some input files may cause an error during the runtime, as per below
+```
+user@exploit:~/Desktop/git$ ./suope.py 192.168.56.3 --userfile /tmp/userlist.txt --passfile ./rockyou.txt 
+        
+      SSH User or Password Enmeration  
+
+,adPPYba, 88       88  ,adPPYba,  8b,dPPYba,   ,adPPYba,  
+I8[    "" 88       88 a8"     "8a 88P'    "8a a8P_____88      
+ `"Y8ba,  88       88 8b       d8 88       d8 8PP"
+aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa 
+`"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
+                                  88           
+                                  88 
+                    V1.0.5
+          ASCII Art Credit ascii.co.uk
+                                            
+Traceback (most recent call last):
+  File "./suope.py", line 191, in <module>
+    linepassword = [line.strip("\n") for line in open(args.passfile,'r', encoding ="utf-8")]
+  File "./suope.py", line 191, in <listcomp>
+    linepassword = [line.strip("\n") for line in open(args.passfile,'r', encoding ="utf-8")]
+  File "/usr/lib/python3.5/codecs.py", line 321, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf1 in position 923: invalid continuation byte
+user@exploit:~/Desktop/git$ 
+```
+
+to fix this, a database like rock you may need to be converted, with the following command
+
+`iconv -f ISO-8859-1 -t UTF-8 rockyou.txt > rockyou_utf8.txt`
+
 
 ## Credits
 Initial Exploit Code -  Justin Gardner, Penetration Tester @ SynerComm AssureIT - Github: https://github.com/Rhynorater/CVE-2018-15473-Exploit  
