@@ -57,7 +57,9 @@ def exploit(hostname, username, port, validuser = ""):
 
     # get rid of paramiko logging
     ######CHECK WHAT THIS DOES, IS IT REDUNDANT?#######
-    logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
+    #logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
+    logging.basicConfig()
+    logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
     # create function to perform authentication with malformed packet and desired username
     def checkUsername(username, tried=0):

