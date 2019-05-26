@@ -1,0 +1,34 @@
+[36m        
+      SSH User or Password Enmeration  
+
+,adPPYba, 88       88  ,adPPYba,  8b,dPPYba,   ,adPPYba,  
+I8[    "" 88       88 a8"     "8a 88P'    "8a a8P_____88      
+ `"Y8ba,  88       88 8b       d8 88       d8 8PP"
+aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa 
+`"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
+                                  88           
+                                  88 
+                    V1.0.5
+          ASCII Art Credit ascii.co.uk
+                                            
+[33m[*] User: frank => is not a valid user[0m
+[34m[+] User: tom => is a valid user[0m
+[31m[/] User: tom [/] Pass: user => Login Incorrect!!! <=[0m
+[31m[/] User: tom [/] Pass: Password1 => Login Incorrect!!! <=[0m
+[31m[/] User: tom [/] Pass:  => Login Incorrect!!! <=[0m
+[34m[+] User: root => is a valid user[0m
+[31m[/] User: root [/] Pass: user => Login Incorrect!!! <=[0m
+[31m[/] User: root [/] Pass: Password1 => Login Incorrect!!! <=[0m
+[31m[/] User: root [/] Pass:  => Login Incorrect!!! <=[0m
+[34m[+] User: jerry => is a valid user[0m
+[31m[/] User: jerry [/] Pass: user => Login Incorrect!!! <=[0m
+[32m[+] User: jerry [+] Pass Found: Password1[0m
+[34m[+] User: user => is a valid user[0m
+[32m[+] User: user [+] Pass Found: user[0m
+[33m[*] User: jane => is not a valid user[0m
+[33m[*] User: sam => is not a valid user[0m
+[34m[+] User: secret => is a valid user[0m
+[31m[/] User: secret [/] Pass: user => Login Incorrect!!! <=[0m
+[31m[/] User: secret [/] Pass: Password1 => Login Incorrect!!! <=[0m
+[31m[/] User: secret [/] Pass:  => Login Incorrect!!! <=[0m
+[33m[*] User: admin => is not a valid user[0m
