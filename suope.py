@@ -150,13 +150,11 @@ try:
     arg_parser.add_argument('hostname', type=str, help="The target hostname or ip address")
     group = arg_parser
     arg_parser.add_argument('--port', type=int, default=22, help="The target port (Default 22)")
-    arg_parser.add_argument('--suppress', type=bool, default=False, help="Suppresses unsuccessful usernames or passwords")
-    group = arg_parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--username', type=str, help="A Single Usename to Enumerate")
-    group.add_argument('--userfile', type=str, help="The list of usernames (one per line) to enumerate through")
-    group = arg_parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--password', type=str, help="A Single Password to Enumerate")
-    group.add_argument('--passfile', type=str, help="The list of passwords (one per line) to enumerate through")
+    arg_parser.add_argument('--suppress', type=bool, default=False, help="Suppresses unsuccessful usernames or passwords")    
+    arg_parser.add_argument('--username', type=str, default=user, help="A Single Usename to Enumerate")
+    arg_parser.add_argument('--userfile', type=str, help="The list of usernames (one per line) to enumerate through")   
+    arg_parser.add_argument('--password', type=str, default=password, help="A Single Password to Enumerate")
+    arg_parser.add_argument('--passfile', type=str, help="The list of passwords (one per line) to enumerate through")
 
     args = arg_parser.parse_args()
 
