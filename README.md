@@ -44,10 +44,10 @@ optional arguments:
   -h, --help           show this help message and exit
   --port PORT          The target port (Default 22)
   --suppress SUPPRESS  Suppresses unsuccessful usernames or passwords
-  --username USERNAME  A Single Usename to Enumerate
+  --username USERNAME  A Single Usename to Enumerate (Default User)
   --userfile USERFILE  The list of usernames (one per line) to enumerate
                        through
-  --password PASSWORD  A Single Password to Enumerate
+  --password PASSWORD  A Single Password to Enumerate (Default Password)
   --passfile PASSFILE  The list of passwords (one per line) to enumerate
                        through
 
