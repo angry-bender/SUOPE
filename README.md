@@ -1,5 +1,4 @@
-# SUOPE - SSH USER OR PASSWORD ENUMERATION by Samuel Freeman
-
+# SUOPE - SSH USER OR PASSWORD ENUMERATION by angry-bender
      
                 )     (    )                      SSH User or Password Enmeration  
                  )     )  ( 
@@ -101,7 +100,7 @@ Initial Password Code - Sergeant Sploit - https://null-byte.wonderhowto.com/how-
 
 
 ## Licence
-Copyright (c) 2019 Samuel Freeman - All Rights Reserved
+Copyright (c) 2019 - All Rights Reserved
 
 Permission is not granted without the express prior written approval from the author, to any person obtaining a copy of this software and associated documentation files (the "Software"), to copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software.
 
