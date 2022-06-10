@@ -182,7 +182,7 @@ aa    ]8I "8a,   ,a88 "8a,   ,a8" 88b,   ,a8" "8b,   ,aa
 `"YbbdP"'  `"YbbdP'Y8  `"YbbdP"'  88`YbbdP"'   `"Ybbd8"' 
                                   88           
                                   88 
-                    V1.0.5
+                    V1.0.6
           ASCII Art Credit ascii.co.uk
                                             """)
     #Checks to makesure the passed in userfile extits in the filesystem then stores it into an array
