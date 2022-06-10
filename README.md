@@ -18,7 +18,7 @@ Exploits CVE-2018-15473 and runs a fuzzing test from a list of passwords, like t
 ## Requirements
 1. Python 3
      - pip
-          - paramiko==2.4.1
+          - paramiko
           - cryptography==2.4.2
           - colorama
 
