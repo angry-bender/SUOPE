@@ -19,7 +19,7 @@ Exploits CVE-2018-15473 and runs a fuzzing test from a list of passwords, like t
 1. Python 3
      - pip
           - paramiko
-          - cryptography==2.4.2
+          - cryptography
           - colorama
 
 2. A Vulnerable SSH Box with;
